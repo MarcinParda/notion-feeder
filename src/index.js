@@ -9,6 +9,7 @@ async function index() {
   const feedItems = await getNewFeedItems();
 
   for (let i = 0; i < feedItems.length; i++) {
+    console.log('Feed:', feedItems[i].title, 'added to Notion.');
     const item = feedItems[i];
     const notionItem = {
       title: item.title,
