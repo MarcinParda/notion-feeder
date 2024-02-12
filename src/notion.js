@@ -69,7 +69,7 @@ export async function addFeedItemToNotion(notionItem) {
             },
           ],
         },
-        Link: {
+        link: {
           url: link,
         },
       },
@@ -99,13 +99,13 @@ export async function deleteOldUnreadFeedItemsFromNotion() {
       filter: {
         and: [
           {
-            property: 'Created At',
+            property: 'created_at',
             date: {
               on_or_before: fetchBeforeDate.toJSON(),
             },
           },
           {
-            property: 'Read',
+            property: 'read',
             checkbox: {
               equals: false,
             },
