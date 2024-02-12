@@ -19,6 +19,7 @@ async function index() {
   }
 
   await deleteOldUnreadFeedItemsFromNotion();
+  process.exit(0);
 }
 
 index();
