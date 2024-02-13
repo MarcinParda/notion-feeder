@@ -70,13 +70,7 @@ export async function addFeedItemToNotion(notionItem) {
           ],
         },
         link: {
-          rich_text: [
-            {
-              text: {
-                content: link,
-              },
-            },
-          ],
+          url: link,
         },
       },
     });
