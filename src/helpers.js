@@ -15,3 +15,7 @@ export default function timeDifference(date1, date2) {
     diffInSeconds,
   };
 }
+
+export function removeExtraSpaces(str) {
+  return str.trim().replace(/\s*(\.\s+|\s+)\s*/g, '$1');
+}

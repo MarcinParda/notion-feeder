@@ -3,7 +3,7 @@ import {
   addFeedItemToNotion,
   deleteOldUnreadFeedItemsFromNotion,
 } from './notion';
-import htmlToNotionBlocks from './parser';
+import { removeExtraSpaces } from './helpers';
 
 async function index() {
   const feedItems = await getNewFeedItems();
@@ -11,9 +11,8 @@ async function index() {
   for (let i = 0; i < feedItems.length; i++) {
     const item = feedItems[i];
     const notionItem = {
-      title: item.title,
-      link: item.link,
-      content: htmlToNotionBlocks(item.content),
+      title: removeExtraSpaces(item.title),
+      link: removeExtraSpaces(item.link),
     };
     await addFeedItemToNotion(notionItem);
   }
