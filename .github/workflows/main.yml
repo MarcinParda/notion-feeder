@@ -15,10 +15,9 @@ jobs:
       RUN_FREQUENCY: 43200 # in seconds
     steps:
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v4
         with:
-          node-version: 'lts/*'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: '20.x'
 
       - name: Update npm
         run: npm install -g npm@latest

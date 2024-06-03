@@ -18,6 +18,8 @@ export async function getFeedUrlsFromNotion() {
     logLevel,
   });
 
+  console.log(NOTION_API_TOKEN);
+
   let response;
   try {
     response = await notion.databases.query({
@@ -84,8 +86,6 @@ export async function deleteOldUnreadFeedItemsFromNotion() {
     auth: NOTION_API_TOKEN,
     logLevel,
   });
-
-  console.log(NOTION_API_TOKEN);
 
   // Create a datetime which is 30 days earlier than the current time
   const fetchBeforeDate = new Date();
