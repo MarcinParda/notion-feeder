@@ -14,21 +14,16 @@ jobs:
       NOTION_FEEDS_DATABASE_ID: ${{ secrets.NOTION_FEEDS_DATABASE_ID }}
       RUN_FREQUENCY: 43200 # in seconds
     steps:
-      - name: Setup Node
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # Use the latest checkout action[2][6]
+
+      - uses: actions/setup-node@v4 # Use the latest setup-node action[6]
         with:
-          node-version: '20.x'
-
-      - name: Update npm
-        run: npm install -g npm@latest
-
-      - name: Checkout code
-        uses: actions/checkout@v2
+          node-version: '20.x' # Specify Node.js 20
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
+      - name: Build project  
         run: npm run build
 
       - name: Update Notion Feed
