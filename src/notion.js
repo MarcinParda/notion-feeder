@@ -10,13 +10,15 @@ const {
   CI,
 } = process.env;
 
-const logLevel = CI ? LogLevel.INFO : LogLevel.DEBUG;
+const logLevel = CI ? LogLevel.DEBUG : LogLevel.DEBUG;
 
 export async function getFeedUrlsFromNotion() {
   const notion = new Client({
     auth: NOTION_API_TOKEN,
     logLevel,
   });
+
+  console.log('NOTION_API_TOKEN', NOTION_API_TOKEN);
 
   let response;
   try {
