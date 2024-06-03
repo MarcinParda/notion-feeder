@@ -19,3 +19,7 @@ export default function timeDifference(date1, date2) {
 export function removeExtraSpaces(str) {
   return str.trim().replace(/\s*(\.\s+|\s+)\s*/g, '$1');
 }
+
+export function isSameDay(date1, date2) {
+  return date1.toDateString() === date2.toDateString();
+}

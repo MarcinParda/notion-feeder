@@ -12,12 +12,12 @@ const {
 
 const logLevel = CI ? LogLevel.INFO : LogLevel.DEBUG;
 
-export async function getFeedUrlsFromNotion() {
-  const notion = new Client({
-    auth: NOTION_API_TOKEN,
-    logLevel,
-  });
+export const notion = new Client({
+  auth: NOTION_API_TOKEN,
+  logLevel,
+});
 
+export async function getFeedUrlsFromNotion() {
   let response;
   try {
     response = await notion.databases.query({
@@ -49,11 +49,6 @@ export async function getFeedUrlsFromNotion() {
 export async function addFeedItemToNotion(notionItem) {
   const { title, link } = notionItem;
 
-  const notion = new Client({
-    auth: NOTION_API_TOKEN,
-    logLevel,
-  });
-
   try {
     await notion.pages.create({
       parent: {
@@ -80,11 +75,6 @@ export async function addFeedItemToNotion(notionItem) {
 }
 
 export async function deleteOldUnreadFeedItemsFromNotion() {
-  const notion = new Client({
-    auth: NOTION_API_TOKEN,
-    logLevel,
-  });
-
   // Create a datetime which is 30 days earlier than the current time
   const fetchBeforeDate = new Date();
   fetchBeforeDate.setDate(fetchBeforeDate.getDate() - 30);
@@ -131,4 +121,39 @@ export async function deleteOldUnreadFeedItemsFromNotion() {
       console.error(err);
     }
   }
+}
+
+export async function getLastWeekFeedItemsFromNotion() {
+  // Create a datetime which is 7 days earlier than the current time
+  const fetchBeforeDate = new Date();
+  fetchBeforeDate.setDate(fetchBeforeDate.getDate() - 7);
+
+  // Query the feed reader database
+  // and fetch only those items that are created in the last 7 days
+  let response;
+  try {
+    response = await notion.databases.query({
+      database_id: NOTION_READER_DATABASE_ID,
+      filter: {
+        and: [
+          {
+            property: 'created_at',
+            date: {
+              on_or_after: fetchBeforeDate.toJSON(),
+            },
+          },
+        ],
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+
+  const feedItems = response.results.map((item) => ({
+    title: item.properties.Title.title[0].plain_text,
+    link: item.properties.link.url,
+  }));
+
+  return feedItems;
 }

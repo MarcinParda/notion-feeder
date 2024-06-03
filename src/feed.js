@@ -1,7 +1,10 @@
 import Parser from 'rss-parser';
 import dotenv from 'dotenv';
-import timeDifference from './helpers';
-import { getFeedUrlsFromNotion } from './notion';
+import timeDifference, { removeExtraSpaces } from './helpers';
+import {
+  getFeedUrlsFromNotion,
+  getLastWeekFeedItemsFromNotion,
+} from './notion';
 
 dotenv.config();
 
@@ -19,11 +22,24 @@ async function getNewFeedItemsFrom(feedUrl) {
   const currentTime = new Date().getTime() / 1000;
 
   // Filter out items that fall in the run frequency range
-  return rss.items.filter((item) => {
+  const filteredByRunFrequency = rss.items.filter((item) => {
     const blogPublishedTime = new Date(item.pubDate).getTime() / 1000;
     const { diffInSeconds } = timeDifference(currentTime, blogPublishedTime);
-    return diffInSeconds < RUN_FREQUENCY;
+    return diffInSeconds < Number(RUN_FREQUENCY);
   });
+
+  const lastWeekFeedItemsFromNotion = await getLastWeekFeedItemsFromNotion();
+
+  // Filter out items that are already in the database
+  const filteredByLastWeekFeedItems = filteredByRunFrequency.filter(
+    (item) =>
+      !lastWeekFeedItemsFromNotion.some(
+        (notionItem) =>
+          removeExtraSpaces(notionItem.link) === removeExtraSpaces(item.link)
+      )
+  );
+
+  return filteredByLastWeekFeedItems;
 }
 
 export default async function getNewFeedItems() {
