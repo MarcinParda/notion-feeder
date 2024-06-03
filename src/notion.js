@@ -85,6 +85,8 @@ export async function deleteOldUnreadFeedItemsFromNotion() {
     logLevel,
   });
 
+  console.log(NOTION_API_TOKEN);
+
   // Create a datetime which is 30 days earlier than the current time
   const fetchBeforeDate = new Date();
   fetchBeforeDate.setDate(fetchBeforeDate.getDate() - 30);
