@@ -18,7 +18,7 @@ export async function getFeedUrlsFromNotion() {
     logLevel,
   });
 
-  console.log("NOTION_API_TOKEN", NOTION_API_TOKEN);
+  console.log('NOTION_API_TOKEN', NOTION_API_TOKEN);
 
   let response;
   try {
