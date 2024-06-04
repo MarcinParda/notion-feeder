@@ -7,7 +7,6 @@ import { removeExtraSpaces } from './helpers';
 
 async function index() {
   const feedItems = await getNewFeedItems();
-
   for (let i = 0; i < feedItems.length; i++) {
     const item = feedItems[i];
     const notionItem = {

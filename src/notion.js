@@ -130,30 +130,41 @@ export async function getLastWeekFeedItemsFromNotion() {
 
   // Query the feed reader database
   // and fetch only those items that are created in the last 7 days
-  let response;
-  try {
-    response = await notion.databases.query({
-      database_id: NOTION_READER_DATABASE_ID,
-      filter: {
-        and: [
-          {
-            property: 'created_at',
-            date: {
-              on_or_after: fetchBeforeDate.toJSON(),
+  let allFeeds = [];
+  let startCursor;
+
+  while (true) {
+    let response;
+    try {
+      response = await notion.databases.query({
+        database_id: NOTION_READER_DATABASE_ID,
+        filter: {
+          and: [
+            {
+              property: 'created_at',
+              date: {
+                on_or_after: fetchBeforeDate.toJSON(),
+              },
             },
-          },
-        ],
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    return [];
+          ],
+        },
+        start_cursor: startCursor,
+      });
+      startCursor = response.next_cursor;
+      const newFeeds = response.results.map((item) => ({
+        title: item.properties.Title.title[0].plain_text,
+        link: item.properties.link.url,
+      }));
+      allFeeds = [...allFeeds, ...newFeeds];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+
+    if (!response.has_more) {
+      break;
+    }
   }
 
-  const feedItems = response.results.map((item) => ({
-    title: item.properties.Title.title[0].plain_text,
-    link: item.properties.link.url,
-  }));
-
-  return feedItems;
+  return allFeeds;
 }

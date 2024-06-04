@@ -10,7 +10,7 @@ dotenv.config();
 
 const { RUN_FREQUENCY } = process.env;
 
-async function getNewFeedItemsFrom(feedUrl) {
+async function getNewFeedItemsFrom(feedUrl, lastWeekFeedItemsFromNotion) {
   const parser = new Parser();
   let rss;
   try {
@@ -28,8 +28,6 @@ async function getNewFeedItemsFrom(feedUrl) {
     return diffInSeconds < Number(RUN_FREQUENCY);
   });
 
-  const lastWeekFeedItemsFromNotion = await getLastWeekFeedItemsFromNotion();
-
   // Filter out items that are already in the database
   const filteredByLastWeekFeedItems = filteredByRunFrequency.filter(
     (item) =>
@@ -44,12 +42,16 @@ async function getNewFeedItemsFrom(feedUrl) {
 
 export default async function getNewFeedItems() {
   let allNewFeedItems = [];
+  const lastWeekFeedItemsFromNotion = await getLastWeekFeedItemsFromNotion();
 
   const feeds = await getFeedUrlsFromNotion();
 
   for (let i = 0; i < feeds.length; i++) {
     const { feedUrl } = feeds[i];
-    const feedItems = await getNewFeedItemsFrom(feedUrl);
+    const feedItems = await getNewFeedItemsFrom(
+      feedUrl,
+      lastWeekFeedItemsFromNotion
+    );
     allNewFeedItems = [...allNewFeedItems, ...feedItems];
   }
 
