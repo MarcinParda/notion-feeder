@@ -47,7 +47,7 @@ export async function getFeedUrlsFromNotion() {
 }
 
 export async function addFeedItemToNotion(notionItem) {
-  const { title, link } = notionItem;
+  const { title, link, aiSummary } = notionItem;
 
   try {
     await notion.pages.create({
@@ -66,6 +66,15 @@ export async function addFeedItemToNotion(notionItem) {
         },
         link: {
           url: link,
+        },
+        ai_summary: {
+          rich_text: [
+            {
+              text: {
+                content: aiSummary,
+              },
+            },
+          ],
         },
       },
     });
