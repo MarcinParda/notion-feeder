@@ -4,20 +4,20 @@ import {
   deleteOldUnreadFeedItemsFromNotion,
 } from './notion';
 import { removeExtraSpaces } from './helpers';
-import summorizeThisArticle from './perplexity';
+import { summorizeArticle } from './aiFunctions/summorizeArticle';
 
-const aiSummaryBlacklist = ['youtube.com', 'youtu.be'];
+const youtubeLinks = ['youtube.com', 'youtu.be'];
 
 async function index() {
   const feedItems = await getNewFeedItems();
   for (let i = 0; i < feedItems.length; i++) {
     const item = feedItems[i];
 
-    let aiSummary = 'THIS LINK IS IN THE AI SUMMARY GENERATOR BLACKLIST';
-    if (
-      !aiSummaryBlacklist.some((blacklist) => item.link.includes(blacklist))
-    ) {
-      aiSummary = await summorizeThisArticle(item.link);
+    let aiSummary = '';
+    if (youtubeLinks.some((ytlink) => item.link.includes(ytlink))) {
+      aiSummary = `[Video] - ${item.title}`;
+    } else {
+      aiSummary = await summorizeArticle(item.link);
     }
 
     const notionItem = {

@@ -13,6 +13,9 @@ jobs:
       NOTION_READER_DATABASE_ID: ${{ secrets.NOTION_READER_DATABASE_ID }}
       NOTION_FEEDS_DATABASE_ID: ${{ secrets.NOTION_FEEDS_DATABASE_ID }}
       PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+      LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
+      LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+      LANGFUSE_HOST: ${{ secrets.LANGFUSE_HOST }}
       RUN_FREQUENCY: 604800 # in seconds
     steps:
       - uses: actions/checkout@v4 # Use the latest checkout action[2][6]
