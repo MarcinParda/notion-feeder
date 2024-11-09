@@ -3,30 +3,14 @@ import {
   addFeedItemToNotion,
   deleteOldUnreadFeedItemsFromNotion,
 } from './notion';
-import { removeExtraSpaces } from './helpers';
-import { summorizeArticle } from './aiFunctions/summorizeArticle';
-
-const youtubeLinks = ['youtube.com', 'youtu.be'];
+import { summorizeArticles } from './utils/summorizeArticles';
 
 async function index() {
   const feedItems = await getNewFeedItems();
-  for (let i = 0; i < feedItems.length; i++) {
-    const item = feedItems[i];
+  const summarizationPromises = await summorizeArticles(feedItems);
 
-    let aiSummary = '';
-    if (youtubeLinks.some((ytlink) => item.link.includes(ytlink))) {
-      aiSummary = `[Video] - ${item.title}`;
-    } else {
-      aiSummary = await summorizeArticle(item.link);
-    }
-
-    const notionItem = {
-      title: removeExtraSpaces(item.title),
-      link: removeExtraSpaces(item.link),
-      aiSummary,
-    };
-    await addFeedItemToNotion(notionItem);
-  }
+  const notionItems = await Promise.all(summarizationPromises);
+  await Promise.all(notionItems.map(addFeedItemToNotion));
 
   await deleteOldUnreadFeedItemsFromNotion();
   process.exit(0);

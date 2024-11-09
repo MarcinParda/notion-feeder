@@ -36,4 +36,3 @@ AI: Invalid URL for a web development summary. Please provide a technical articl
 USER: Summarize this article: https://www.freecodecamp.org/news/how-to-write-clean-code-tips-for-developers/
 AI:
 `;
-export default '';

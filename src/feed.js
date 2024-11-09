@@ -1,6 +1,6 @@
 import Parser from 'rss-parser';
 import dotenv from 'dotenv';
-import timeDifference, { removeExtraSpaces } from './helpers';
+import timeDifference, { removeExtraSpaces } from './utils/helpers';
 import {
   getFeedUrlsFromNotion,
   getLastWeekFeedItemsFromNotion,

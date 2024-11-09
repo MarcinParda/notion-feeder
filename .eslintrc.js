@@ -16,5 +16,6 @@ module.exports = {
     'no-plusplus': ['off'],
     'no-await-in-loop': ['off'],
     'no-console': 'off',
+    'import/prefer-default-export': ['off'],
   },
 };
