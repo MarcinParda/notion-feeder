@@ -35,10 +35,7 @@ export const createBody = ({
   frequency_penalty,
 });
 
-export const createOptions = ({
-  body,
-  perplexityApiKey = PERPLEXITY_API_KEY,
-}) => ({
+const createOptions = ({ body, perplexityApiKey = PERPLEXITY_API_KEY }) => ({
   method: 'POST',
   headers: {
     Authorization: `Bearer ${perplexityApiKey}`,
@@ -47,7 +44,8 @@ export const createOptions = ({
   body: JSON.stringify(body),
 });
 
-const complitions = async (options) => {
+const complitions = async (body) => {
+  const options = createOptions({ body });
   try {
     const response = await fetch(
       'https://api.perplexity.ai/chat/completions',
@@ -63,5 +61,3 @@ const complitions = async (options) => {
 export const perplexityApi = {
   complitions,
 };
-
-export default {};

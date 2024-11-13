@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { Langfuse } from 'langfuse';
+import { createPromptFromMessages } from './utils/helpers';
 
 dotenv.config();
 
@@ -11,4 +12,34 @@ export const langfuse = new Langfuse({
   host: LANGFUSE_HOST,
 });
 
-export default '1';
+export const withLangfuse = async ({
+  traceName,
+  generationName,
+  body,
+  aiApiRequest,
+}) => {
+  const trace = langfuse.trace({
+    name: traceName,
+    userId: 'notion-feeder',
+  });
+
+  const generation = trace.generation({
+    name: generationName,
+    model: body.model,
+    modelParameters: {
+      temperature: body.temperature,
+      maxTokens: body.max_tokens,
+    },
+    input: {
+      prompt: createPromptFromMessages(body.messages),
+    },
+  });
+
+  const result = await aiApiRequest();
+
+  generation.end({
+    output: result,
+  });
+
+  return result;
+};

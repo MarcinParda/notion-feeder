@@ -1,20 +1,23 @@
+import { assignArticleCategory } from '../aiFunctions/assignArticleCategory';
 import { summorizeArticle } from '../aiFunctions/summorizeArticle';
 import { youtubeLinks } from '../conts/youtubeLinks';
 import { removeExtraSpaces } from './helpers';
 
 export async function summorizeArticles(feedItems) {
   return feedItems.map(async (item) => {
-    let aiSummary = '';
+    let summary = '';
     if (youtubeLinks.some((ytlink) => item.link.includes(ytlink))) {
-      aiSummary = `[Video] - ${item.title}`;
+      summary = `[Video] - ${item.title}`;
     } else {
-      aiSummary = await summorizeArticle(item.link);
+      summary = await summorizeArticle(item.link);
     }
+    const category = await assignArticleCategory(item.title, summary);
 
     return {
       title: removeExtraSpaces(item.title),
       link: removeExtraSpaces(item.link),
-      aiSummary,
+      summary,
+      category,
     };
   });
 }

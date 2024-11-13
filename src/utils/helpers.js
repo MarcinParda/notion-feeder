@@ -23,3 +23,29 @@ export function removeExtraSpaces(str) {
 export function isSameDay(date1, date2) {
   return date1.toDateString() === date2.toDateString();
 }
+
+export const createPromptFromMessages = (messages) =>
+  messages.reduce(
+    (prompt, message) =>
+      `${prompt}
+      ------------------------------
+      ${message.content}`,
+    ''
+  );
+
+export const createMessages = (systemMessage, userMessages) => {
+  const userObjectMessages = userMessages.map((content) => ({
+    role: 'user',
+    content,
+  }));
+  if (!systemMessage) {
+    return userObjectMessages;
+  }
+  return [
+    {
+      role: 'system',
+      content: systemMessage,
+    },
+    ...userObjectMessages,
+  ];
+};
